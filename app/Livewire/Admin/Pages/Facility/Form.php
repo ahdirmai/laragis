@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Pages\Facility;
 
 use App\Models\Facility;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class Form extends Component
 {
@@ -46,7 +47,7 @@ class Form extends Component
         try {
             Facility::create([
                 'name' => $this->name,
-                'slug' => \Str::slug($this->name),
+                'slug' => Str::slug($this->name),
                 'description' => $this->description
 
             ]);
