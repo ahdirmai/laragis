@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Models\Address;
@@ -32,6 +33,8 @@ Route::middleware('auth', 'role:admin')->name('admin.')->prefix('admin')->group(
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+
+    Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 });
 
 Route::middleware('auth')->prefix('user')->group(function () {

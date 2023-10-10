@@ -68,10 +68,16 @@
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Master Data</span>
         </li>
-        <li class="menu-item  {{ request()->routeIs('admin.category.*')?" active":''}}">
+        <li class="menu-item  {{ request()->routeIs('admin.categories.*')?" active":''}}">
             <a href="{{ route('admin.categories.index') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Categories</div>
+            </a>
+        </li>
+        <li class="menu-item  {{ request()->routeIs('admin.facilities.*')?" active":''}}">
+            <a href="{{ route('admin.facilities.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Facility</div>
             </a>
         </li>
     </ul>
