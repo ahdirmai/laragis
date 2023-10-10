@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
@@ -24,12 +25,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin', [DashboardController::class, 'index'])->middleware(['auth', 'role:admin'])->name('admin.dashboard');
-Route::get('/user', [UserDashboardController::class, 'index'])->middleware(['auth'])->name('user.dashboard');
+// Route::get('/admin', [DashboardController::class, 'index'])->middleware(['auth', 'role:admin'])->name('admin.dashboard');
+// Route::get('/user', [UserDashboardController::class, 'index'])->middleware(['auth'])->name('user.dashboard');
 
+Route::middleware('auth', 'role:admin')->name('admin.')->prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/province', function () {
-    return Province::where('code', 63)->with('cities')->get();
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+});
+
+Route::middleware('auth')->prefix('user')->group(function () {
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 });
 
 Route::get('/dashboard', function () {

@@ -21,7 +21,7 @@
   data-template="vertical-menu-template-free"
 >
   <head>
-      <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+      <title>@yield('title')</title>
     @include('layouts.admin.includes.meta')
     @include('layouts.admin.includes.styles')
     @stack('styles')
@@ -71,6 +71,22 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     @include('layouts.admin.includes.scripts')
+    <script>
+        $(document).ready(function($) {
+            $('.modal-basic').on('show.bs.modal',(event) =>{
+                // console.log(button);
+                var button = $(event.relatedTarget)
+                var modal = $(this)
+                var title = button.data('title')
+                var url = button.data('url')
+                console.log(title);
+                modal.find('.modal-basic-title').text(title)
+                modal.find('.modal-body-custome').load(url)
+            });
+        })
+    </script>
     @stack('scripts')
+
+    @stack('modals-section')
   </body>
 </html>
