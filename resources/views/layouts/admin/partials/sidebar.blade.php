@@ -63,6 +63,12 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
+        <li class="menu-item  {{ request()->routeIs('admin.destinations.*')?" active":''}}">
+            <a href="{{ route('admin.destinations.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Destinations</div>
+            </a>
+        </li>
 
 
         <li class="menu-header small text-uppercase">

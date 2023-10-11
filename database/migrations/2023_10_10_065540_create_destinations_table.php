@@ -21,6 +21,7 @@ return new class extends Migration
             $table->float('latitude');
             $table->float('longitude');
             $table->unsignedBigInteger('village_code');
+            $table->unsignedBigInteger('postal_code');
             $table->unsignedBigInteger('category_id');
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
