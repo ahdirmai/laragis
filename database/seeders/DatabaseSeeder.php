@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             FacilitySeeder::class,
+            DestinationSeeder::class,
         ]);
     }
 }

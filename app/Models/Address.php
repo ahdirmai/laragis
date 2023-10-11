@@ -14,7 +14,7 @@ class Address extends Model
         if ($code) {
             return Province::where('code', $code)->first();
         } else {
-            $provinces = Province::all();
+            return $provinces = Province::all();
         }
     }
 }
