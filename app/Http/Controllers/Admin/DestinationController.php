@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreDestinationRequest;
 use App\Models\Category;
 use App\Models\Destination;
 use App\Models\Province;
@@ -21,7 +22,7 @@ class DestinationController extends Controller
             $destination->name = $destination_raw->name;
             $destination->address = $destination_raw->address;
             $destination->category = $destination_raw->category->name;
-            $destination->thumbnail = "https://source.unsplash.com/random/300×300";
+            $destination->image = $destination_raw->getFirstMediaUrl('destination/' . $destination_raw->id, 'preview') ? $destination_raw->getFirstMediaUrl('destination/' . $destination_raw->id, 'preview') : "https://source.unsplash.com/random/";
             $destination->status = true;
             array_push($destinations, $destination);
         }
@@ -43,5 +44,25 @@ class DestinationController extends Controller
             'provinces' => $province,
         ];
         return view('admin.pages.destination.create', $data);
+    }
+
+    public function store(StoreDestinationRequest $request)
+    {
+        $destination = new Destination();
+        $destination->name = $request->name;
+        $destination->slug = \Str::slug($request->name);
+        $destination->address = $request->address;
+        $destination->description = $request->description;
+        $destination->latitude = $request->latitude;
+        $destination->longitude = $request->longitude;
+        $destination->village_code = $request->village_code;
+        $destination->category_id = $request->category;
+        $destination->save();
+
+        // store image to Spatie Media Library
+        if ($request->hasFile('imageInput')) {
+            $destination->addMediaFromRequest('imageInput')->toMediaCollection('destination/' . $destination->id);
+        }
+        return redirect()->route('admin.destinations.index');
     }
 }

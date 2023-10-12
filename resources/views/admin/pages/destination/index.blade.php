@@ -46,7 +46,8 @@
                         <td class=" align-middle">{{ $destination->address }}</td>
                         <td class=" align-middle">{{ $destination->category }}</td>
                         <td class=" align-middle">
-                            <img src="{{ $destination->thumbnail }}" alt="" class="img-thumbnail">
+                            <img src="{{ $destination->image??" https://source.unsplash.com/random/" }}" alt=""
+                                class="img-thumbnail">
                         </td>
                         <td class="align-middle">@if ($destination->status)
                             <span class="badge bg-success">Open</span>

@@ -8,31 +8,49 @@
             <h5 class="mb-0">Create Destinations</h5>
         </div>
         <div class="card-body">
-            <form>
+            <form action="{{ route('admin.destinations.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Name</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="name" />
+                        <input type="text" value="{{ old('name') }}"
+                            class="form-control @error('name') is-invalid @enderror" name="name" />
+                        @error('name')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
+
                 </div>
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Description</label>
                     <div class="col-sm-10">
-                        <textarea class="form-control" name="description"></textarea>
+                        <textarea value="{{ old('description') }}"
+                            class="form-control @error('description') is-invalid @enderror"
+                            name="description"></textarea>
+                        @error('description')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
+
                 </div>
 
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Address</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" name="address" />
+                        <input type="text" value="{{ old('address') }}"
+                            class="form-control @error('address') is-invalid @enderror" name="address" />
+                        @error('address')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
+
                 </div>
 
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-5">
-                        <select class="form-select" id="provinceSelect" aria-label="Default select example">
+                        <select class="form-select @error('village_code') is-invalid @enderror" id="provinceSelect"
+                            aria-label="Default select example">
                             <option selected value="0" value="0">Pilih Provinsi</option>
                             @foreach ($provinces as $province)
                             <option value={{ $province->code}}>{{ $province->name }}</option>
@@ -40,7 +58,8 @@
                         </select>
                     </div>
                     <div class=" col-sm-5">
-                        <select class="form-select" id="citySelect" aria-label="Default select example" disabled>
+                        <select class="form-select @error('village_code') is-invalid @enderror" id="citySelect"
+                            aria-label="Default select example" disabled>
                             <option value="0" selected>Pilih Kota</option>
                         </select>
                     </div>
@@ -49,13 +68,14 @@
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-4">
-                        <select class="form-select" id="districtSelect" aria-label="Default select example" disabled>
+                        <select class="form-select @error('village_code') is-invalid @enderror" id="districtSelect"
+                            aria-label="Default select example" disabled>
                             <option value="0" selected>Pilih Kelurahan</option>
                         </select>
                     </div>
                     <div class="col-sm-4">
-                        <select class="form-select" id="villageSelect" name="villageSelect"
-                            aria-label="Default select example" disabled>
+                        <select class="form-select @error('village_code') is-invalid @enderror" id="villageSelect"
+                            name="village_code" aria-label="Default select example" disabled>
                             <option value="0" selected>Pilih Desa/Kecamatan</option>
                         </select>
                     </div>
@@ -68,27 +88,53 @@
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Category</label>
                     <div class="col-sm-10">
-                        <select class="form-select" id="category" name="category" aria-label="Default select example">
+                        <select class="form-select @error('category') is-invalid @enderror" id="category"
+                            name="category" aria-label="Default select example">
                             <option selected value="0">Pilih Category</option>
                             @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
+                        @error('category')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label">Location</label>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" name="latitude" placeholder="latitude" />
+                        <input type="text" value="{{ old('latitude') }}"
+                            class="form-control @error('latitude') is-invalid @enderror" name="latitude"
+                            placeholder="latitude" />
                     </div>
                     <div class="col-sm-5">
-                        <input type="text" class="form-control" name="longitude" placeholder="longitude" />
+                        <input type="text" value="{{ old('longitude') }}"
+                            class="form-control @error('longitude') is-invalid @enderror" name="longitude"
+                            placeholder="longitude" />
                     </div>
+                    @error('latitude' ||'longitude')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="row mb-3">
                     <label class="col-sm-2 col-form-label"></label>
                     <div class="col-sm-10">
                         <div id="map"></div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label">Image</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="imageInput" name="imageInput" accept="image/*"
+                            onchange="previewImage(this);">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <img id="previewedImage" src="#" alt="Image Preview" class="img-fluid" style="display: none;">
                     </div>
                 </div>
 
@@ -247,7 +293,7 @@
 
                     lat = village.meta.lat;
                     long = village.meta.long;
-                    map.setZoom(13)
+                    map.setZoom(14)
                     map.setView([lat, long]);
 
                 }
@@ -286,6 +332,23 @@
 
      map.on('click', onMapClick);
 </script>
+{{-- end Map Script --}}
+
+{{-- Img Preview Script --}}
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById('previewedImage');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{{-- End Img Preview Script --}}
 @endpush
 
 

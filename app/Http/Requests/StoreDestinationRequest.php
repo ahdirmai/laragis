@@ -23,6 +23,14 @@ class StoreDestinationRequest extends FormRequest
     {
         return [
             //
+            'name' => 'required|max:255',
+            'address' => 'required|max:255',
+            'description' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'village_code' => 'required',
+            'category' => 'required|exists:categories,id',
+            'imageInput' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
     }
 }
