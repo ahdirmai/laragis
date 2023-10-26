@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('destination_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('destination_id');
-            $table->enum('open_day_type', ['everyday', '5day', 'custom']);
+            $table->enum('open_day_type', ['everyday', 'custom']);
             $table->enum('open_time_type', ['default', 'custom']);
             $table->json('detail')->nullable();
 

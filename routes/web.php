@@ -38,6 +38,12 @@ Route::middleware('auth', 'role:admin')->name('admin.')->prefix('admin')->group(
     Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
     Route::resource('destinations', \App\Http\Controllers\Admin\DestinationController::class);
+    Route::POST('/destinations/{slug}/gallery', [\App\Http\Controllers\Admin\DestinationController::class, 'storeGallery'])->name('destinations.gallery.store');
+    Route::PUT('/destinations/{slug}/position', [\App\Http\Controllers\Admin\DestinationController::class, 'storeGallery'])->name('destinations.position.edit');
+
+    Route::get('destinations/{slug}/edit/open-hours', [\App\Http\Controllers\Admin\DestinationController::class, 'editOpenHours'])->name('destinations.open-hours.edit');
+    Route::POST('destinations/{slug}/store/open-hours', [\App\Http\Controllers\Admin\DestinationController::class, 'storeOpenHours'])->name('destinations.open-hours.store');
+    Route::PUT('destinations/{slug}/update/open-hours', [\App\Http\Controllers\Admin\DestinationController::class, 'storeOpenHours'])->name('destinations.open-hours.update');
 });
 
 Route::middleware('auth')->prefix('user')->group(function () {

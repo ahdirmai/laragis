@@ -46,8 +46,7 @@
                         <td class=" align-middle">{{ $destination->address }}</td>
                         <td class=" align-middle">{{ $destination->category }}</td>
                         <td class=" align-middle">
-                            <img src="{{ $destination->image??" https://source.unsplash.com/random/" }}" alt=""
-                                class="img-thumbnail">
+                            <img src="{{ $destination->image}}" alt="" class="img-thumbnail">
                         </td>
                         <td class="align-middle">@if ($destination->status)
                             <span class="badge bg-success">Open</span>
@@ -62,7 +61,8 @@
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item"></i>
+                                    <a class="dropdown-item"
+                                        href="{{ route('admin.destinations.show',$destination->slug) }}"></i>
                                         Detail</a>
                                     <a class="dropdown-item"></i>
                                         Edit</a>
