@@ -94,7 +94,6 @@ class DestinationController extends Controller
 
     public function storeGallery(Request $request, $slug, FlasherInterface $flasher)
     {
-
         $destination = Destination::where('slug', $slug)->first();
 
         $destination_id = $destination->id;
@@ -149,57 +148,117 @@ class DestinationController extends Controller
     public function storeOpenHours(Request $request, $slug)
     {
         // return $request;
-        $destination = Destination::where('slug', $slug)->first();
+        try {
+            $destination = Destination::where('slug', $slug)->first();
 
-        $destinationDetails = $destination->destinationDetails;
-        if (!$destinationDetails) {
-            $destinationDetails = new DestinationDetail();
-            $destinationDetails->destination_id = $destination->id;
-        }
-        $destinationDetails->open_day_type = $request->open_day_type;
-        $destinationDetails->open_time_type = $request->open_time_type;
-        if ($request->open_time_type == 'default') {
-            $time = ['open' => '08:00', 'close' => '17:00'];
-        } else {
-            $time = ['open' => $request->timeOpen, 'close' => $request->timeClose];
-        }
-
-        $details = [];
-        if ($request->open_day_type == 'everyday') {
-            $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        } else {
-            $days = $request->checkbox;
-        }
-
-        foreach ($days as $index => $day_raw) {
+            $destinationDetails = $destination->destinationDetails;
+            if (!$destinationDetails) {
+                $destinationDetails = new DestinationDetail();
+                $destinationDetails->destination_id = $destination->id;
+            }
+            $destinationDetails->open_day_type = $request->open_day_type;
+            $destinationDetails->open_time_type = $request->open_time_type;
             if ($request->open_time_type == 'default') {
-                $day = [
-                    $day_raw => [
-                        'open' => $time['open'],
-                        'close' => $time['close']
-                    ]
-                ];
+                $time = ['open' => '08:00', 'close' => '17:00'];
             } else {
-                $day = [
-                    $day_raw => [
-                        'open' => $time['open'][$index],
-                        'close' => $time['close'][$index]
-                    ]
-                ];
+                $time = ['open' => $request->timeOpen, 'close' => $request->timeClose];
             }
 
-            array_push($details, $day);
-        }
-        $combinedData = [];
+            $details = [];
+            if ($request->open_day_type == 'everyday') {
+                $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            } else {
+                $days = $request->checkbox;
+            }
 
-        foreach ($details as $item) {
-            $day = key($item);
-            $combinedData[$day] = $item[$day];
-        }
-        $destinationDetails->detail = $combinedData;
-        $destinationDetails->save();
+            // return $days;
 
-        sweetalert()->addSuccess('Destination Details Update Successfully');
-        return redirect()->route('admin.destinations.show', $slug);
+            foreach ($days as $index => $day_raw) {
+                if ($request->open_time_type == 'default') {
+                    $day = [
+                        $day_raw => [
+                            'open' => $time['open'],
+                            'close' => $time['close']
+                        ]
+                    ];
+                } else {
+                    $day = [
+                        $day_raw => [
+                            'open' => $time['open'][$index],
+                            'close' => $time['close'][$index]
+                        ]
+                    ];
+                }
+
+                array_push($details, $day);
+            }
+            $combinedData = [];
+
+            foreach ($details as $item) {
+                $day = key($item);
+                $combinedData[$day] = $item[$day];
+            }
+            $destinationDetails->detail = $combinedData;
+            $destinationDetails->save();
+
+            sweetalert()->addSuccess('Destination Details Update Successfully');
+            return redirect()->route('admin.destinations.show', $slug);
+        } catch (\Throwable $th) {
+            sweetalert()->addError('Destination Details Update Failed');
+            return redirect()->route('admin.destinations.show', $slug);
+        }
+    }
+
+    public function editDestinationDetail($slug)
+    {
+        $destination = Destination::where('slug', $slug)->first();
+        $target = 'admin.pages.destination.edit-destination';
+        $url = route('admin.destinations.destination-detail.update', $slug);
+        $condition = 'edit';
+
+        // return $destinationDetails->detail['monday']['close'];
+        $categories = Category::all();
+        $data = [
+            'url' => $url,
+            'destination' => $destination,
+            'condition' => $condition,
+            'categories' => $categories
+        ];
+        return view($target, $data);
+    }
+
+    public function updateDestinationDetail(Request $request, $slug)
+    {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+        ]);
+
+        try {
+            $destination = Destination::where('slug', $slug)->first();
+            $destination->name = $request->name;
+            $destination->slug = \Str::slug($request->name);
+            $destination->description = $request->description;
+            $destination->category_id = $request->category;
+            $destination->save();
+
+            sweetalert()->addSuccess('Destination Update Successfully');
+            return redirect()->route('admin.destinations.show', $destination->slug);
+        } catch (\Throwable $th) {
+            sweetalert()->addDanger('Destination Update Failed');
+            return redirect()->route('admin.destinations.show', $destination->slug);
+        }
+    }
+
+    public function destroy($slug)
+    {
+        // return $slug;
+        $destination = Destination::where('slug', $slug)->first();
+        $deleted = $destination->delete();
+        if ($deleted) {
+            sweetalert()->addSuccess('Destination Deleted Successfully');
+            return redirect()->back();
+        }
     }
 }

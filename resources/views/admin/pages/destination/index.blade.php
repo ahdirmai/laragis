@@ -64,9 +64,8 @@
                                     <a class="dropdown-item"
                                         href="{{ route('admin.destinations.show',$destination->slug) }}"></i>
                                         Detail</a>
-                                    <a class="dropdown-item"></i>
-                                        Edit</a>
-                                    <a class="dropdown-item"></i>
+                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target=".modal-delete"
+                                        data-url="{{ route('admin.destinations.destroy',$destination->slug) }}"></i>
                                         Delete</a>
                                 </div>
                             </div>
@@ -78,4 +77,23 @@
         </div>
     </div>
 </div>
+@push('modals-section')
+
+<x-admin.delete-modal>
+    <x-slot:title>
+        Delete Destination
+    </x-slot:title>
+
+    <x-slot:body>
+        Are you sure you want to delete this destination?
+    </x-slot:body>
+</x-admin.delete-modal>
+@endpush
+
+@push('scripts')
+
+
+@endpush
+
+
 @endsection

@@ -35,4 +35,10 @@ class Destination extends Model implements HasMedia
     {
         return $this->hasOne(DestinationDetail::class);
     }
+
+    public function facilities()
+    {
+        return $this->belongsToMany(Facility::class, 'destination_has_facilities', 'destination_id', 'facility_id')
+            ->withPivot('status', 'quantity', 'description');
+    }
 }

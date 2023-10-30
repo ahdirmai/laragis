@@ -67,9 +67,7 @@
         <button type="button" class="btn btn-secondary me-1" data-bs-dismiss="modal">Cancel</button>
         @if ($condition = 'edit')
         <button type="submit" id="submitButton" class="btn btn-primary">Update</button>
-
         @else
-
         <button type="submit" id="submitButton" class="btn btn-primary">Create</button>
         @endif
     </div>
@@ -84,6 +82,8 @@
                 }
                 $('input[name="checkbox[]"]').prop('checked', true);
                 $('input[name="checkbox[]"]').prop("disabled", true);
+                $('input[type="time"]').prop('required', true);
+
             } else {
                 $('#details-form').removeClass('d-none');
                 $('input[name="checkbox[]"]').prop("disabled", false);
@@ -124,6 +124,7 @@
             if (this.checked) {
                 var checkedValue = $(this).val();
                 $('input.' + checkedValue).each(function () {
+
                     if ($('#open_time_type').val() == 'default') {
                         $(this).val('08:00');
                         $(this).prop('disabled', true);
@@ -143,5 +144,8 @@
                 });
             }
         });
+
+        $('#open_day_type').val('{{ @$destinationDetails->open_day_type }}').change();
+        $('#open_time_type').val('{{ @$destinationDetails->open_time_type }}').change();
     });
 </script>

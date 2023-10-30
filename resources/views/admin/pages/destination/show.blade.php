@@ -18,14 +18,15 @@
                         {{ $destination->description }}
                     </p>
                     <div class="text-end">
-                        <a href="javascript:void(0)" class="btn btn-primary">Edit</a>
+                        <button data-url="{{ route('admin.destinations.destination-details.edit',$destination->slug) }}"
+                            data-bs-toggle="modal" data-bs-target=".modal-basic" data-title="Edit Destination Details"
+                            class="btn btn-primary">Edit</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-5">
-
             <div class="card mb-3">
                 <div class="card-header">Open Hours Detail</div>
                 <div class="card-body">
@@ -47,7 +48,7 @@
                         <button class="btn btn-primary"
                             data-url="{{ route('admin.destinations.open-hours.edit',$destination->slug) }}"
                             data-bs-toggle="modal" data-bs-target=".modal-basic"
-                            data-title="Edit Destination Details">Edit</button>
+                            data-title="Edit Time Open Details">Edit</button>
                     </div>
                 </div>
             </div>
@@ -66,46 +67,54 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">Galery</div>
+                <div class="card-body">
 
-    <div class="card mb-3">
-        <div class="card-header">Galery</div>
-        <div class="card-body">
-
-            @include('admin.pages.destination.add-image')
-        </div>
-        <div class="text-end me-3">
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" id="addImageButton"
-                data-bs-target="#addImage" aria-expanded="false" aria-controls="collapseExample">Tambah Foto</button>
-        </div>
-        <div class="card-body">
-            <div class="d-flex justify-content-center">
-                <div id="carouselExample" class="carousel slide w-50 h-25" data-bs-ride="carousel">
-                    <ol class="carousel-indicators">
-                        @foreach ($destination->image as $item)
-                        <li data-bs-target="#carouselExample" data-bs-slide-to="{{ $loop->iteration-1 }}"
-                            class="{{ ($loop->iteration == 1)? " active" : "" }}"></li>
-                        @endforeach
-                    </ol>
-                    <div class="carousel-inner">
-                        @foreach ($destination->image as $item)
-                        <div class="carousel-item  {{ ($loop->iteration == 1)? " active" : "" }}">
-                            <img class="d-block w-100" src="{{ $item->getUrl() }}" alt="First slide" />
-
+                    @include('admin.pages.destination.add-image')
+                </div>
+                <div class="text-end me-3">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" id="addImageButton"
+                        data-bs-target="#addImage" aria-expanded="false" aria-controls="collapseExample">Tambah
+                        Foto</button>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                            <ol class="carousel-indicators">
+                                @foreach ($destination->image as $item)
+                                <li data-bs-target="#carouselExample" data-bs-slide-to="{{ $loop->iteration-1 }}"
+                                    class="{{ ($loop->iteration == 1)? " active" : "" }}"></li>
+                                @endforeach
+                            </ol>
+                            <div class="carousel-inner">
+                                @foreach ($destination->image as $item)
+                                <div class="carousel-item  {{ ($loop->iteration == 1)? " active" : "" }}">
+                                    <img class="d-block w-100" style="max-height: 400px" src="{{ $item->getUrl() }}"
+                                        alt="First slide" />
+                                </div>
+                                @endforeach
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </a>
                         </div>
-                        @endforeach
                     </div>
-                    <a class="carousel-control-prev" href="#carouselExample" role="button" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExample" role="button" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </a>
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
+            <livewire:admin.pages.destination.facility.index :slug='$destination->slug' />
+        </div>
     </div>
+
 
 </div>
 @push('styles')
@@ -129,8 +138,14 @@
         $('#addImageButton').click(function(){
             $('#addImageButton').hide();
         })
-        $('#canceAddImageButton').click(function(){
+        $('#cancelAddImageButton').click(function(){
             $('#addImageButton').show();
+        })
+        $('#addFacillitiesButton').click(function(){
+            $('#addFacillitiesButton').hide();
+        })
+        $('#cancelAddFacillitiesButton').click(function(){
+            $('#addFacillitiesButton').show();
         })
 
         $('#editPositionButton').click(function(){

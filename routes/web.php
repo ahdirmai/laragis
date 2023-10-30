@@ -37,13 +37,26 @@ Route::middleware('auth', 'role:admin')->name('admin.')->prefix('admin')->group(
 
     Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 
+    // Destination
     Route::resource('destinations', \App\Http\Controllers\Admin\DestinationController::class);
+    // Galery
     Route::POST('/destinations/{slug}/gallery', [\App\Http\Controllers\Admin\DestinationController::class, 'storeGallery'])->name('destinations.gallery.store');
+
+    // Position
     Route::PUT('/destinations/{slug}/position', [\App\Http\Controllers\Admin\DestinationController::class, 'storeGallery'])->name('destinations.position.edit');
 
+    // Open Hours
     Route::get('destinations/{slug}/edit/open-hours', [\App\Http\Controllers\Admin\DestinationController::class, 'editOpenHours'])->name('destinations.open-hours.edit');
     Route::POST('destinations/{slug}/store/open-hours', [\App\Http\Controllers\Admin\DestinationController::class, 'storeOpenHours'])->name('destinations.open-hours.store');
     Route::PUT('destinations/{slug}/update/open-hours', [\App\Http\Controllers\Admin\DestinationController::class, 'storeOpenHours'])->name('destinations.open-hours.update');
+
+    // Destination Detail
+    Route::get('destinations/{slug}/edit/destination-detail', [\App\Http\Controllers\Admin\DestinationController::class, 'editDestinationDetail'])->name('destinations.destination-details.edit');
+    Route::PUT('destinations/{slug}/update/destination-detail', [\App\Http\Controllers\Admin\DestinationController::class, 'updateDestinationDetail'])->name('destinations.destination-detail.update');
+
+
+    Route::resource('facilities', \App\Http\Controllers\Admin\FacilityController::class);
+    // Route::get('facility/create/anywhere', [FacilityController::class, 'create'])->name('facilities.create');
 });
 
 Route::middleware('auth')->prefix('user')->group(function () {

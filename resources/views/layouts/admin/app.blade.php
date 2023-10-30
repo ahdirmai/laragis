@@ -71,6 +71,7 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     @include('layouts.admin.includes.scripts')
+    <x-admin.basic-modal></x-admin.basic-modal>
     <script>
         $(document).ready(function($) {
             $('.modal-basic').on('show.bs.modal',(event) =>{
